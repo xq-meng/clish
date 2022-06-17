@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/cli.dir/src/main.cpp.o CMakeFiles/cli.dir/src/command_list.cpp.o CMakeFiles/cli.dir/src/command_shell.cpp.o CMakeFiles/cli.dir/src/read_buf.cpp.o -o cli 

@@ -1,0 +1,3 @@
+/home/xqmeng/workspace/cli/build/CMakeFiles/rebuild_cache.dir
+/home/xqmeng/workspace/cli/build/CMakeFiles/edit_cache.dir
+/home/xqmeng/workspace/cli/build/CMakeFiles/cli.dir

@@ -1,10 +1,13 @@
+#ifndef _CLISH_READBUF_H
+#define _CLISH_READBUF_H
+
 #include <termios.h>
 #include <stdio.h>
 
 static struct termios old, current;
 
 /* Initialize new terminal i/o settings */
-void initTermios(int echo) 
+inline void initTermios(int echo) 
 {
     tcgetattr(0, &old); /* grab old terminal i/o settings */
     current = old; /* make new settings same as old settings */
@@ -18,13 +21,13 @@ void initTermios(int echo)
 }
 
 /* Restore old terminal i/o settings */
-void resetTermios(void) 
+inline void resetTermios(void) 
 {
     tcsetattr(0, TCSANOW, &old);
 }
 
 /* Read 1 character - echo defines echo mode */
-char getch_(int echo) 
+inline char getch_(int echo) 
 {
     char ch;
     initTermios(echo);
@@ -34,13 +37,15 @@ char getch_(int echo)
 }
 
 /* Read 1 character without echo */
-char _getch(void) 
+inline char _getch(void) 
 {
     return getch_(0);
 }
 
 /* Read 1 character with echo */
-char _getche(void) 
+inline char _getche(void) 
 {
     return getch_(1);
 }
+
+#endif

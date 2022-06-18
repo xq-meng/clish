@@ -1,25 +1,18 @@
-#include <iostream>
-#include <string>
-#include <stack>
-
-#include "command_list.h"
-#include "command_shell.h"
+#include "clish/clish.h"
 
 using namespace std;
 
-command_list command_list_initialize() {
-    command_list cst;
-    cst.insert_command("Create::Connector");
-    cst.insert_command("Create::Domain");
-    return cst;
-}
-
-
 int main(int argc, char** argv)
 {
-    command_list cst = command_list_initialize();
+    clish::clish cl;
 
-    shell::run(cst);
+    auto f = [](std::vector<std::string>){ std::cout << "Lambda function." << std::endl; };
+
+    std::function<void(std::vector<std::string>)> standard_lambda_function = f;
+
+    cl.registerCommand("Lambda::F1", standard_lambda_function);
+
+    cl.run();
 
     return 0;
 }

@@ -1,1 +1,12 @@
-build/
+# build files
+*build*/*
+out/
+
+# IDE
+.cache/
+.vs/
+.vscode/
+.idea/
+
+# mac os
+.DS_Store

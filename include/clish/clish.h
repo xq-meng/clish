@@ -152,7 +152,7 @@ private:
         for (int i = 0; i < temp_line_len; i++) {
             line += '\b';
         }
-        std::cout << "\033[3m" << line << "\033[0m" << std::flush;
+        std::cout << "\033[1;30m" << line << "\033[0m" << std::flush;
         prev_hint_len = to_hint.length();
     }
 

@@ -95,10 +95,7 @@ private:
 
     std::vector<std::string> command_history = { "" };
 
-    int pos = 0;
-    int prev_hint_len = 0;
-
-    inline std::string get_command(const std::string& line) {
+    static std::string get_command(const std::string& line) {
         std::stringstream ss(line);
         std::string word;
         std::vector<std::string> command_para_list;
@@ -108,7 +105,7 @@ private:
         return command_para_list.empty() ? "" : command_para_list[0];
     }
 
-    inline void flush_print(const std::string& to_print) {
+    void flush_print(const std::string& to_print) {
         // get command and parameter. command print in red or green, parameter print in default color.
         size_t space_pos = to_print.find(' ');
         std::string command_str = (space_pos == std::string::npos) ? to_print : to_print.substr(0, space_pos);
@@ -143,7 +140,7 @@ private:
         flush_hints(to_hint);
     }
 
-    inline void flush_hints(const std::string& to_hint) {
+    void flush_hints(const std::string& to_hint) {
         std::string line = to_hint;
         while (line.length() <= prev_hint_len) {
             line += ' ';
@@ -156,7 +153,11 @@ private:
         prev_hint_len = to_hint.length();
     }
 
-    inline void clear_buffer() {
+    static void clear_buffer(int signum = 0) {
+        if (signum == 2) {
+            std::cout << std::endl;
+        }
+        current_command = "";
         std::cout << ">>> " << std::flush;
         pos = 0;
     }
@@ -208,15 +209,19 @@ private:
     }
 
 public:
+    static int pos;
+    static int prev_hint_len;
+    static std::string current_command;
+
     void registerCommand(const std::string& _command_str, const std::function<void(std::vector<std::string>)>_function) {
         this->cm.insert_command(_command_str, _function);
     }
 
     void run() {
-        std::string current_command;
         int command_cursor = 1;
         clear_buffer();
         while (true) {
+            signal(SIGINT, clear_buffer);
             char c;
             KEYBOARD key = keyboard_input(c);
             if (key == KEYBOARD::TAB) {
@@ -256,5 +261,9 @@ public:
         }
     }
 };
+
+int clish::pos = 0;
+int clish::prev_hint_len = 0;
+std::string clish::current_command = "";
 
 }

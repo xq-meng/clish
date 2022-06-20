@@ -28,7 +28,7 @@ inline KEYBOARD keyboard_input(char& c) {
 		return KEYBOARD::ENTER;
 	else if (c == 127 || c == 8)
 		return KEYBOARD::BACKSPACE;
-	else if (c == 3)
+	else if (c == 4)
 		return KEYBOARD::EXIT;
 #ifndef WINDOWS_PLATFORM
     else if (c == 27) {

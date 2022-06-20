@@ -6,11 +6,20 @@ int main(int argc, char** argv)
 {
     clish::clish cl;
 
-    auto f = [](std::vector<std::string>){ std::cout << "Lambda function." << std::endl; };
+    auto foo = [](std::vector<std::string>){ std::cout << "Lambda Foo." << std::endl; };
+    auto bar = [](std::vector<std::string>){ std::cout << "Lambda Bar." << std::endl; };
+    auto fb = [](std::vector<std::string> strs) {
+        for (auto& _str : strs)
+            std::cout << _str << std::endl;
+    };
 
-    std::function<void(std::vector<std::string>)> standard_lambda_function = f;
+    std::function<void(std::vector<std::string>)> standard_lambda_foo = foo;
+    std::function<void(std::vector<std::string>)> standard_lambda_bar = bar;
+    std::function<void(std::vector<std::string>)> parameter_print = fb;
 
-    cl.registerCommand("Lambda::F1", standard_lambda_function);
+    cl.registerCommand("Lambda::Foo", standard_lambda_foo);
+    cl.registerCommand("Lambda::Bar", standard_lambda_bar);
+    cl.registerCommand("Print::Parameter", fb);
 
     cl.run();
 

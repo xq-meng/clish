@@ -214,6 +214,12 @@ public:
     static int prev_hint_len;
     static std::string current_command;
 
+    clish() {
+        auto _exit_lambda = [](std::vector<std::string>){ exit(0); };
+        std::function<void(std::vector<std::string>)> _exit_function(_exit_lambda); 
+        this->cm.insert_command("Exit", _exit_function);
+    }
+
     void registerCommand(const std::string& _command_str, const std::function<void(std::vector<std::string>)>_function) {
         this->cm.insert_command(_command_str, _function);
     }
@@ -222,10 +228,24 @@ public:
         int command_cursor = 1;
         clear_buffer();
         while (true) {
+            // For Linux console, cannot accept Ctrl+C as char input.
             signal(SIGINT, clear_buffer);
+    
+            // Get input from keyboard.
             char c;
             KEYBOARD key = keyboard_input(c);
-            if (key == KEYBOARD::TAB) {
+            if (key == KEYBOARD::ALPHA){
+                current_command.push_back(c);
+                flush_print(current_command);
+            }
+            else if (key == KEYBOARD::BACKSPACE && !current_command.empty()) {
+                current_command.pop_back();
+                flush_print(current_command);
+            }
+            else if (key == KEYBOARD::INTERRUPT) {
+                clear_buffer(2);
+            }
+            else if (key == KEYBOARD::TAB) {
                 std::string prefix = cm.longest_prefix(current_command);
                 current_command = prefix.empty() ? current_command : prefix;
                 flush_print(current_command);
@@ -238,10 +258,6 @@ public:
                 current_command.clear();
                 clear_buffer();
             }
-            else if (key == KEYBOARD::BACKSPACE && !current_command.empty()) {
-                current_command.pop_back();
-                flush_print(current_command);
-            }
             else if (key == KEYBOARD::UP) {
                 current_command = command_history[command_cursor > 0 ? --command_cursor : 0];
                 flush_print(current_command);
@@ -250,10 +266,6 @@ public:
                 int n = command_history.size();
                 current_command = command_cursor < n - 1 ? command_history[command_cursor + 1] : "";
                 command_cursor = command_cursor < n ? command_cursor + 1 : command_cursor;
-                flush_print(current_command);
-            }
-            else if (key == KEYBOARD::ALPHA){
-                current_command.push_back(c);
                 flush_print(current_command);
             }
             else if (key == KEYBOARD::EXIT) {

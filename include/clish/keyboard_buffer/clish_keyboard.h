@@ -9,52 +9,74 @@
 
 namespace clish {
 
-enum class KEYBOARD{
-    ERROR,
-    ALPHA,
-    BACKSPACE,
-    ENTER,
-    TAB,
-    UP,
-    DOWN,
-    EXIT
-};
+    enum class KEYBOARD {
+        ALPHA,
+        BACKSPACE,
+        ENTER,
+        ERROR,
+        EXIT,
+        INTERRUPT,
+        TAB,
+        UP,
+        DOWN,
+        UNSPECIFIED,
+    };
 
-inline KEYBOARD keyboard_input(char& c) {
-    c = _getch();
-	if (c == 9)
-		return KEYBOARD::TAB;
-	else if (c == 10 || c == 13)
-		return KEYBOARD::ENTER;
-	else if (c == 127 || c == 8)
-		return KEYBOARD::BACKSPACE;
-	else if (c == 4)
-		return KEYBOARD::EXIT;
 #ifndef WINDOWS_PLATFORM
-    else if (c == 27) {
+    KEYBOARD keyboard_input(char& c) {
         c = _getch();
-        c = _getch();
-        if (c == 65)
-            return KEYBOARD::UP;
-        else if (c == 66)
-            return KEYBOARD::DOWN;
-        else
-            return KEYBOARD::ERROR;
+        if (c == 3)
+            return KEYBOARD::INTERRUPT;
+        else if (c == 4)
+            return KEYBOARD::EXIT;
+        else if (c == 9)
+            return KEYBOARD::TAB;
+        else if (c == 10)
+            return KEYBOARD::ENTER;
+        else if (c == 127)
+            return KEYBOARD::BACKSPACE;
+        else if (c == 27) {
+            c = _getch();
+            c = _getch();
+            if (c == 65)
+                return KEYBOARD::UP;
+            else if (c == 66)
+                return KEYBOARD::DOWN;
+            else
+                return KEYBOARD::ERROR;
+        }
+        else if (c < 32)
+            return KEYBOARD::UNSPECIFIED;
+        return KEYBOARD::ALPHA;
     }
 #else
-    else if (c == -32) {
+    KEYBOARD keyboard_input(char& c) {
         c = _getch();
-        if (c == 72)
-            return KEYBOARD::UP;
-        else if (c == 80)
-            return KEYBOARD::DOWN;
-        else
-            return KEYBOARD::ERROR;
+        if (c == 3)
+            return KEYBOARD::INTERRUPT;
+        else if (c == 4)
+            return KEYBOARD::EXIT;
+        else if (c == 9)
+            return KEYBOARD::TAB;
+        else if (c == 13)
+            return KEYBOARD::ENTER;
+        else if (c == 8)
+            return KEYBOARD::BACKSPACE;
+        else if (c == -32) {
+            c = _getch();
+            if (c == 72)
+                return KEYBOARD::UP;
+            else if (c == 80)
+                return KEYBOARD::DOWN;
+            else
+                return KEYBOARD::ERROR;
+        }
+        else if (c < 32)
+            return KEYBOARD::UNSPECIFIED;
+        return KEYBOARD::ALPHA;
     }
-#endif
-    return KEYBOARD::ALPHA;
-}
+#endif // WINDOWS_PLATFORM
+    
+} // namespace clish
 
-}
-
-#endif
+#endif // _CLISH_KEYBOARD_H

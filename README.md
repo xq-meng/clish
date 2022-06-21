@@ -54,7 +54,7 @@ target_link_libraries([YOUR_PROJECT] PRIVATE clish::clish)
 
 ### demo
 
-![demo](docs/clish_demo.gif)
+![demo](https://blog-static.cnblogs.com/files/xqmeng/clish_demo.gif)
 
 ## Dependencies
 

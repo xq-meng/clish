@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <functional>
+#include <signal.h>
 #include <string>
 #include <sstream>
 #include <vector>

@@ -1,6 +1,22 @@
 #include "clish/clish.h"
 
+#include <ctime>
+
 using namespace std;
+
+void prt(std::vector<std::string> args) {
+    time_t now = time(0);
+
+    char* time_str = ctime(&now);
+    
+    if (!args.empty() && args[0] == "UTC") {
+        tm* gmt = gmtime(&now);
+        time_str = asctime(gmt);
+    }
+
+    std::cout << time_str << std::endl;
+}
+
 
 int main(int argc, char** argv)
 {
@@ -15,11 +31,11 @@ int main(int argc, char** argv)
 
     std::function<void(std::vector<std::string>)> standard_lambda_foo = foo;
     std::function<void(std::vector<std::string>)> standard_lambda_bar = bar;
-    std::function<void(std::vector<std::string>)> parameter_print = fb;
 
     cl.registerCommand("Lambda::Foo", standard_lambda_foo);
     cl.registerCommand("Lambda::Bar", standard_lambda_bar);
     cl.registerCommand("Print::Parameter", fb);
+    cl.registerCommand("Print::Time", prt);
 
     cl.run();
 

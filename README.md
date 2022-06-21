@@ -52,6 +52,10 @@ add_subdirectory([YOUR_PATH_TO_CLISH])
 target_link_libraries([YOUR_PROJECT] PRIVATE clish::clish)
 ```
 
+### demo
+
+![demo](docs/clish_demo.gif)
+
 ## Dependencies
 
 Thanks for Tessil's [hat-trie](https://github.com/Tessil/hat-trie). It provide a trie with high profermance, and I've include ``hat-trie`` in this project. 

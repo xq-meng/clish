@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 If you save this in ``hello.cpp``, then you could compile this with :
 
 ```bash
-g++ -std=c++11 -I[YOUR_PATH_TO_CLISH] clish hello.cpp -o hello
+g++ -std=c++11 -I[YOUR_PATH_TO_CLISH] hello.cpp -o hello
 ```
 
 Running ``./hello`` would then produce a shell with internal command ``::Foo``

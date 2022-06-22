@@ -47,7 +47,7 @@ namespace clish {
     };
 
 #ifdef WINDOWS_PLATFORM
-    static std::unordered_map<key_ascii, KEYBOARD, key_ascii_hash_fn> ascii_map = {
+    static const std::unordered_map<key_ascii, KEYBOARD, key_ascii_hash_fn> ascii_map = {
         { {3, 0, 0},    KEYBOARD::INTERRUPT },
         { {4, 0, 0},    KEYBOARD::EXIT      },
         { {9, 0, 0},    KEYBOARD::TAB       },
@@ -60,7 +60,7 @@ namespace clish {
         { {224, 75, 0}, KEYBOARD::LEFT      }
     };
 #else 
-    static std::unordered_map<key_ascii, KEYBOARD, key_ascii_hash_fn> ascii_map = {
+    static const std::unordered_map<key_ascii, KEYBOARD, key_ascii_hash_fn> ascii_map = {
         { {3, 0, 0},    KEYBOARD::INTERRUPT },
         { {4, 0, 0},    KEYBOARD::EXIT      },
         { {9, 0, 0},    KEYBOARD::TAB       },
@@ -79,7 +79,7 @@ namespace clish {
         _getchs(vc);
         c = vc[0];
         if (ascii_map.count(vc)) 
-            return ascii_map[vc];
+            return ascii_map.at(vc);
         return (c < 32) ? KEYBOARD::UNSPECIFIED : KEYBOARD::ALPHA;
     }
 

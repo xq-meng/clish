@@ -42,6 +42,13 @@ Running ``./hello`` would then produce a shell with internal command ``::Foo``
 Hello.
 ```
 
+If you are running on Windows platform, add macro definition ``WINDOWS_PLATFORM`` before include ``clish/clish.h``.
+
+```cpp
+#define WINDOWS_PLATFORM
+#include "clish/clish.h"
+```
+
 ### Via CMake
 
 You cam use ``clish`` in your CMake project by ``add_subdirectory`` command.

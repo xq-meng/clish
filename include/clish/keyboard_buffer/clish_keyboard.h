@@ -16,6 +16,7 @@ namespace clish {
         BACKSPACE,
         ENTER,
         ERROR,
+        ESC,
         EXIT,
         INTERRUPT,
         TAB,
@@ -51,11 +52,12 @@ namespace clish {
         { {4, 0, 0},    KEYBOARD::EXIT      },
         { {9, 0, 0},    KEYBOARD::TAB       },
         { {13, 0, 0},   KEYBOARD::ENTER     },
+        { {27, 0, 0},   KEYBOARD::ESC       },
         { {8, 0, 0},    KEYBOARD::BACKSPACE },
-        { {-32, 72, 0}, KEYBOARD::UP        },
-        { {-32, 80, 0}, KEYBOARD::DOWN      },
-        { {-32, 77, 0}, KEYBOARD::RIGHT     },
-        { {-32, 75, 0}, KEYBOARD::LEFT      }
+        { {224, 72, 0}, KEYBOARD::UP        },
+        { {224, 80, 0}, KEYBOARD::DOWN      },
+        { {224, 77, 0}, KEYBOARD::RIGHT     },
+        { {224, 75, 0}, KEYBOARD::LEFT      }
     };
 #else 
     static std::unordered_map<key_ascii, KEYBOARD, key_ascii_hash_fn> ascii_map = {
@@ -63,6 +65,7 @@ namespace clish {
         { {4, 0, 0},    KEYBOARD::EXIT      },
         { {9, 0, 0},    KEYBOARD::TAB       },
         { {10, 0, 0},   KEYBOARD::ENTER     },
+        { {27, 0, 0},   KEYBOARD::ESC       },
         { {127, 0, 0},  KEYBOARD::BACKSPACE },
         { {27, 91, 65}, KEYBOARD::UP        },
         { {27, 91, 66}, KEYBOARD::DOWN      },

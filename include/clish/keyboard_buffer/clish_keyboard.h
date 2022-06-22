@@ -6,6 +6,8 @@
 #else 
 #include <conio.h>
 #endif
+#include <array>
+#include <unordered_map>
 
 namespace clish {
 
@@ -19,64 +21,65 @@ namespace clish {
         TAB,
         UP,
         DOWN,
+        RIGHT,
+        LEFT,
         UNSPECIFIED,
     };
 
-#ifndef WINDOWS_PLATFORM
-    KEYBOARD keyboard_input(char& c) {
-        c = _getch();
-        if (c == 3)
-            return KEYBOARD::INTERRUPT;
-        else if (c == 4)
-            return KEYBOARD::EXIT;
-        else if (c == 9)
-            return KEYBOARD::TAB;
-        else if (c == 10)
-            return KEYBOARD::ENTER;
-        else if (c == 127)
-            return KEYBOARD::BACKSPACE;
-        else if (c == 27) {
-            c = _getch();
-            c = _getch();
-            if (c == 65)
-                return KEYBOARD::UP;
-            else if (c == 66)
-                return KEYBOARD::DOWN;
-            else
-                return KEYBOARD::ERROR;
+    typedef std::array<int, 3> key_ascii;
+
+    /* Read up to 3 character without echo */
+    inline void _getchs(key_ascii& vp) {
+        vp[0] = _getch();
+        vp[1] = 0;
+        vp[2] = 0;
+        int i = 1;
+        while(_kbhit()) {
+            vp[i++] = _getch();
         }
-        else if (c < 32)
-            return KEYBOARD::UNSPECIFIED;
-        return KEYBOARD::ALPHA;
     }
-#else
-    KEYBOARD keyboard_input(char& c) {
-        c = _getch();
-        if (c == 3)
-            return KEYBOARD::INTERRUPT;
-        else if (c == 4)
-            return KEYBOARD::EXIT;
-        else if (c == 9)
-            return KEYBOARD::TAB;
-        else if (c == 13)
-            return KEYBOARD::ENTER;
-        else if (c == 8)
-            return KEYBOARD::BACKSPACE;
-        else if (c == -32) {
-            c = _getch();
-            if (c == 72)
-                return KEYBOARD::UP;
-            else if (c == 80)
-                return KEYBOARD::DOWN;
-            else
-                return KEYBOARD::ERROR;
+
+    struct key_ascii_hash_fn {
+        std::size_t operator()(const key_ascii& ka) const noexcept {
+            return std::hash<int>()(ka[0]) ^ std::hash<int>()(ka[1]) ^ std::hash<int>()(ka[2]);
         }
-        else if (c < 32)
-            return KEYBOARD::UNSPECIFIED;
-        return KEYBOARD::ALPHA;
+    };
+
+#ifdef WINDOWS_PLATFORM
+    static std::unordered_map<key_ascii, KEYBOARD, key_ascii_hash_fn> ascii_map = {
+        { {3, 0, 0},    KEYBOARD::INTERRUPT },
+        { {4, 0, 0},    KEYBOARD::EXIT      },
+        { {9, 0, 0},    KEYBOARD::TAB       },
+        { {13, 0, 0},   KEYBOARD::ENTER     },
+        { {8, 0, 0},    KEYBOARD::BACKSPACE },
+        { {-32, 72, 0}, KEYBOARD::UP        },
+        { {-32, 80, 0}, KEYBOARD::DOWN      },
+        { {-32, 77, 0}, KEYBOARD::RIGHT     },
+        { {-32, 75, 0}, KEYBOARD::LEFT      }
+    };
+#else 
+    static std::unordered_map<key_ascii, KEYBOARD, key_ascii_hash_fn> ascii_map = {
+        { {3, 0, 0},    KEYBOARD::INTERRUPT },
+        { {4, 0, 0},    KEYBOARD::EXIT      },
+        { {9, 0, 0},    KEYBOARD::TAB       },
+        { {10, 0, 0},   KEYBOARD::ENTER     },
+        { {127, 0, 0},  KEYBOARD::BACKSPACE },
+        { {27, 91, 65}, KEYBOARD::UP        },
+        { {27, 91, 66}, KEYBOARD::DOWN      },
+        { {27, 91, 67}, KEYBOARD::RIGHT     },
+        { {27, 91, 68}, KEYBOARD::LEFT      }
+    };
+#endif 
+
+    inline KEYBOARD keyboard_input(char& c) {
+        key_ascii vc;
+        _getchs(vc);
+        c = vc[0];
+        if (ascii_map.count(vc)) 
+            return ascii_map[vc];
+        return (c < 32) ? KEYBOARD::UNSPECIFIED : KEYBOARD::ALPHA;
     }
-#endif // WINDOWS_PLATFORM
-    
+
 } // namespace clish
 
 #endif // _CLISH_KEYBOARD_H
